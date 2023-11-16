@@ -1,0 +1,45 @@
+GET http://localhost:1337/api/chanteurs
+###
+GET http://localhost:1337/api/musiques
+###
+@base_url = http://localhost:1337
+
+POST {{base_url}}/api/auth/local
+Content-Type: application/json
+
+{
+  "identifier": "nat7303@hotmail.fr",
+  "password": "Admin123"
+}
+
+###
+POST {{base_url}}/api/chanteurs
+content-type: application/json
+
+{
+    "data": {
+        "nom": "Sekri",
+        "prenom": "Bernard",
+        "date_de_naissance": "1981-02-11"
+    }
+}
+###
+POST {{base_url}}/api/musiques
+content-type: application/json
+
+{
+    "data": {
+        "titre": "je suis une petite patate",
+        "link": "https://www.youtube.com/watch?v=qJzDgSC-oE0",
+        "chanteur": "azerty",
+        "fav": "true",
+        "date_de_sortie": "1981-02-11",
+        "color" : "#000000"
+    }
+}
+
+
+###
+GET {{base_url}}/api/musiques?filters[fav][$eq]=true
+###
+GET http://localhost:1337/api/musiques?populate=*
