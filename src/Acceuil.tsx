@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import MusiqueCard from './MusiqueCard';
+import { useEffect, useState } from "react";
+import MusiqueCard from "./MusiqueCard";
 
 interface Musique {
   id: number;
@@ -47,10 +47,11 @@ const Acceuil = () => {
   }, []);
 
   useEffect(() => {
+
     const fetchChanteurs = async () => {
       const response = await fetch('http://localhost:1337/api/chanteurs');
       const data = await response.json();
-      console.log("chanteurs request", data);
+      console.log("chanteurs requeest", data);
 
       setChanteurs(data.data);
     };
@@ -61,7 +62,7 @@ const Acceuil = () => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = event.target;
     const checked = type === 'checkbox' ? (event.target as HTMLInputElement).checked : undefined;
-    setNewMusique((prevMusique) => ({
+    setNewMusique((prevMusique: any) => ({
       ...prevMusique,
       [name]: checked !== undefined ? checked : value,
     }));
@@ -105,41 +106,12 @@ const Acceuil = () => {
     setIsAddingMusique(false);
   };
 
-  const handleToggleFav = async (id: number) => {
-    const response = await fetch(`http://localhost:1337/api/musiques/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: {
-          fav: !musiques.find((musique) => musique.id === id)?.attributes.fav,
-        },
-      }),
-    });
-
-    if (response.ok) {
-      setMusiques((prevMusiques) =>
-        prevMusiques.map((musique) =>
-          musique.id === id
-            ? {
-                ...musique,
-                attributes: {
-                  ...musique.attributes,
-                  fav: !musique.attributes.fav,
-                },
-              }
-            : musique
-        )
-      );
-    }
-  };
-
   return (
     <div>
       <h2>Musiques</h2>
       <button onClick={() => setIsAddingMusique(true)}>+</button>
 
+      
       {isAddingMusique && (
         <div>
           <h2>Ajouter une nouvelle musique</h2>
@@ -163,6 +135,8 @@ const Acceuil = () => {
                   </option>
                 ))}
               </select>
+
+
             </label>
 
             <label>
@@ -171,58 +145,30 @@ const Acceuil = () => {
             </label>
             <label>
               Date de sortie:
-              <input type="date" name="date_de_sortie" value={newMusique.date_de_sortie} onChange={handleInputChange} />
+              <input type="text" name="date_de_sortie" value={newMusique.date_de_sortie} onChange={handleInputChange} />
             </label>
             <label>
               Couleur:
               <input type="color" name="color" value={newMusique.color} onChange={handleInputChange} />
             </label>
             <button type="submit">Ajouter</button>
-            <button type="button" onClick={handleCancelAddMusique}>
-              Annuler
-            </button>
+            <button type="button" onClick={handleCancelAddMusique}>Annuler</button>
           </form>
         </div>
       )}
 
-      <div>
-        <h3>Favoris</h3>
-        <ul>
-          {musiques
-            .filter((musique) => musique.attributes.fav)
-            .map((musique) => (
-              <MusiqueCard
-                key={musique.id}
-                titre={musique.attributes.titre}
-                prenom={musique.attributes.chanteur.data.attributes.prenom}
-                nom={musique.attributes.chanteur.data.attributes.nom}
-                fav={musique.attributes.fav}
-                couleur={musique.attributes.couleur || '#000000'}
-                onToggleFav={() => handleToggleFav(musique.id)}
-                link={musique.attributes.link}
-              />
-            ))}
-        </ul>
-      </div>
-
-      <div>
-        <h3>Autres Musiques</h3>
-        <ul>
-          {musiques
-            .map((musique) => (
-              <MusiqueCard
-                key={musique.id}
-                titre={musique.attributes.titre}
-                prenom={musique.attributes.chanteur.data.attributes.prenom}
-                nom={musique.attributes.chanteur.data.attributes.nom}
-                fav={musique.attributes.fav}
-                couleur={musique.attributes.couleur || '#000000'}
-                onToggleFav={() => handleToggleFav(musique.id)}
-                link={musique.attributes.link}
-              />
-            ))}
-        </ul>
-      </div>
+      <ul>
+        {musiques.map((musique) => (
+          <MusiqueCard
+            key={musique.id}
+            titre={musique.attributes?.titre || ''}
+            prenom={musique.attributes?.chanteur?.data?.attributes?.prenom || ''}
+            nom={musique.attributes?.chanteur?.data?.attributes?.nom || ''}
+            fav={musique.attributes?.fav || false}
+            couleur={musique.attributes?.couleur || '#000000'}
+          />
+        ))}
+      </ul>
     </div>
   );
 };

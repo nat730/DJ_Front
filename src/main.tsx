@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     element: <Connexion />,
   },
   {
-    path: "/musique",
+    path: "/addmusique",
     element: <Acceuil />,
   }
 ]);
