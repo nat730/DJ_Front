@@ -11,7 +11,7 @@ interface MusiqueCardProps {
 const MusiqueCard: React.FC<MusiqueCardProps> = ({ titre, prenom, nom, fav, couleur }) => {
   const cardStyle: React.CSSProperties = {
     backgroundColor: couleur,
-    color: 'white',
+    color: 'white', 
     padding: '10px',
     margin: '10px',
     borderRadius: '5px',
